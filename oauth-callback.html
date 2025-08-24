@@ -11,14 +11,14 @@
     <script>
       (function(){
         try{
-          if (window.opener && window.opener.zfkAuth && window.opener.zfkAuth.handleRedirectCallback) {
-            window.opener.zfkAuth.handleRedirectCallback(location.href).finally(function(){
-              window.close();
-            });
+          if (window.opener && window.opener.postMessage) {
+            // クロスオリジンのため postMessage で伝達する。
+            window.opener.postMessage({ type: 'zfk:auth:callback', url: location.href }, '*');
           }
         }catch(e){
-          // 何もしない（コンソールのみ）
           console.error(e);
+        } finally {
+          setTimeout(function(){ window.close(); }, 100);
         }
       })();
     </script>
